@@ -1,0 +1,699 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Something Is Wrong Here.</title>
+
+<style>
+* { box-sizing: border-box; }
+
+:root {
+  --bg: #101014;
+  --fg: #f5f1e8;
+  --accent: #c4ff4d;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Courier New", monospace;
+  transition: background .3s, color .3s;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+button, input { font: inherit; }
+
+button {
+  cursor: pointer;
+  border: 1px solid #ffffff40;
+  color: var(--fg);
+  background: #ffffff09;
+  padding: 13px 17px;
+  transition: .18s;
+}
+
+button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+button:active { transform: scale(.96); }
+
+button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.top {
+  padding: 15px 20px;
+  border-bottom: 1px solid #ffffff22;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: #aaa;
+  font-size: 12px;
+}
+
+main {
+  width: min(850px, 92%);
+  margin: auto;
+  padding: 55px 0 90px;
+}
+
+h1 {
+  font-size: clamp(42px, 9vw, 83px);
+  line-height: .99;
+  letter-spacing: -5px;
+  margin: 30px 0;
+}
+
+h1 span { color: var(--accent); }
+
+.sub {
+  color: #999;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.panel {
+  margin-top: 28px;
+  border: 1px solid #ffffff24;
+  padding: 24px;
+  position: relative;
+}
+
+.tag {
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  margin-bottom: 17px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.output {
+  min-height: 28px;
+  margin-top: 18px;
+  color: var(--accent);
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+.big {
+  font-size: 40px;
+  margin: 12px 0;
+}
+
+#runaway {
+  position: relative;
+  transition: transform .15s;
+}
+
+#runaway.dodging {
+  position: fixed;
+  z-index: 10;
+}
+
+.meter {
+  height: 5px;
+  background: #ffffff15;
+  margin-top: 18px;
+  overflow: hidden;
+}
+
+#meterFill {
+  width: 0;
+  height: 100%;
+  background: var(--accent);
+  transition: width .2s;
+}
+
+#uselessFace {
+  font-size: 76px;
+  margin: 18px 0;
+  display: inline-block;
+  transition: transform .3s;
+}
+
+#chaosScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  display: none;
+}
+
+#chaosScreen.active { display: block; }
+
+.chaosWord {
+  position: absolute;
+  font-size: clamp(22px, 5vw, 55px);
+  font-weight: bold;
+  animation: pop .45s ease both;
+}
+
+@keyframes pop {
+  from { transform: scale(0) rotate(-20deg); }
+  to { transform: scale(1) rotate(0); }
+}
+
+footer {
+  border-top: 1px solid #ffffff20;
+  color: #777;
+  padding: 25px 15px;
+  text-align: center;
+  font-size: 11px;
+  line-height: 2;
+}
+
+.secret {
+  display: none;
+  padding: 20px;
+  margin-top: 18px;
+  border: 1px dashed var(--accent);
+  line-height: 1.9;
+}
+
+.secret.open { display: block; }
+
+body.inverted {
+  filter: hue-rotate(145deg);
+}
+
+body.party {
+  animation: party .7s infinite alternate;
+}
+
+@keyframes party {
+  from { background: #22122e; }
+  to { background: #082b26; }
+}
+
+@media(max-width: 600px) {
+  main { padding-top: 35px; }
+  h1 { letter-spacing: -3px; }
+  .panel { padding: 18px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <span>UNKNOWN WEBSITE v0.0001</span>
+  <span id="clock">TIME: PROBABLY NOW</span>
+  <span id="status">EVERYTHING IS FINE.</span>
+</div>
+
+<main>
+  <div class="tag">WELCOME, RANDOM INTERNET PERSON</div>
+
+  <h1>Something is<br><span>wrong here.</span></h1>
+
+  <p class="sub">
+    This website has absolutely no purpose.<br>
+    Unfortunately, it has developed a personality.
+  </p>
+
+  <!-- Experiment 1 -->
+  <section class="panel">
+    <div class="tag">EXPERIMENT 001 — THE SUSPICIOUS BUTTON</div>
+
+    <h2>Whatever you do, don't press this.</h2>
+
+    <button id="suspicious">DO NOT PRESS</button>
+
+    <div class="output" id="suspiciousOut">
+      It is probably better if you listen.
+    </div>
+  </section>
+
+  <!-- Experiment 2 -->
+  <section class="panel">
+    <div class="tag">EXPERIMENT 002 — FREE WILL</div>
+
+    <h2>Try to click this button.</h2>
+
+    <p class="sub">
+      It knows what you're planning.
+    </p>
+
+    <div style="min-height:80px;margin-top:20px">
+      <button id="runaway">CLICK ME IF YOU CAN</button>
+    </div>
+
+    <div class="output" id="runawayOut">
+      The button is feeling nervous.
+    </div>
+  </section>
+
+  <!-- Experiment 3 -->
+  <section class="panel">
+    <div class="tag">EXPERIMENT 003 — EMOTIONAL SUPPORT</div>
+
+    <h2>Talk to this extremely qualified potato.</h2>
+
+    <div id="uselessFace">🥔</div>
+
+    <div class="row">
+      <button onclick="talk('sad')">I'm sad</button>
+      <button onclick="talk('bored')">I'm bored</button>
+      <button onclick="talk('hungry')">I'm hungry</button>
+      <button onclick="talk('life')">Life is confusing</button>
+    </div>
+
+    <div class="output" id="potatoOut">
+      Potato is listening. Potato has no qualifications.
+    </div>
+  </section>
+
+  <!-- Experiment 4 -->
+  <section class="panel">
+    <div class="tag">EXPERIMENT 004 — ABSOLUTELY USELESS</div>
+
+    <h2>Make this number go up.</h2>
+
+    <div class="big" id="counter">0</div>
+
+    <div class="row">
+      <button id="countBtn">INCREASE NUMBER</button>
+      <button id="resetBtn">RUIN MY PROGRESS</button>
+    </div>
+
+    <div class="output" id="counterOut">
+      This achievement will not improve your life.
+    </div>
+
+    <div class="meter">
+      <div id="meterFill"></div>
+    </div>
+  </section>
+
+  <!-- Experiment 5 -->
+  <section class="panel">
+    <div class="tag">EXPERIMENT 005 — CHAOS ENGINE</div>
+
+    <h2>Make the website lose its mind.</h2>
+
+    <p class="sub">
+      Recommended for absolutely no reason.
+    </p>
+
+    <div class="row" style="margin-top:20px">
+      <button id="chaosBtn">ACTIVATE CHAOS</button>
+      <button id="calmBtn">RESTORE NORMALITY</button>
+    </div>
+
+    <div class="output" id="chaosOut">
+      Current chaos level: suspiciously low.
+    </div>
+  </section>
+
+  <!-- Experiment 6 -->
+  <section class="panel">
+    <div class="tag">EXPERIMENT 006 — THE MACHINE</div>
+
+    <h2>A machine that does nothing.</h2>
+
+    <p class="sub">
+      It has one button. It has one job.<br>
+      Its performance is under review.
+    </p>
+
+    <div style="margin-top:20px">
+      <button id="machineBtn">TURN MACHINE ON</button>
+    </div>
+
+    <div class="output" id="machineOut">
+      Machine is asleep.
+    </div>
+  </section>
+
+  <!-- Experiment 7 -->
+  <section class="panel">
+    <div class="tag">EXPERIMENT 007 — YOUR FATE</div>
+
+    <h2>Let a completely unreliable computer decide.</h2>
+
+    <div class="row">
+      <button id="fateBtn">TELL ME MY FATE</button>
+    </div>
+
+    <div class="output" id="fateOut">
+      Your future is currently buffering.
+    </div>
+  </section>
+
+  <!-- Secret -->
+  <section class="panel">
+    <div class="tag">EXPERIMENT 008 — TOP SECRET</div>
+
+    <h2>There is a secret here.</h2>
+
+    <p class="sub">
+      No password. No hints. Just try things.
+    </p>
+
+    <div class="row" style="margin-top:20px">
+      <input id="secretInput" placeholder="Type something..." maxlength="50"
+        style="padding:13px;background:#ffffff09;color:var(--fg);border:1px solid #ffffff40;max-width:100%;width:260px">
+      <button id="secretBtn">SUBMIT</button>
+    </div>
+
+    <div class="secret" id="secretBox">
+      <div class="big">YOU FOUND IT. ♡</div>
+      Congratulations. You have successfully wasted time
+      on a website that was designed to waste time.
+      <br><br>
+      Your reward: this tiny imaginary trophy 🏆
+    </div>
+
+    <div class="output" id="secretOut">
+      The computer is judging your typing.
+    </div>
+  </section>
+
+  <div style="text-align:center;margin-top:55px">
+    <div class="big">¯\_(ツ)_/¯</div>
+    <p class="sub">You came here for a reason.<br>We regret to inform you that we have forgotten it.</p>
+    <button class="row" style="margin:25px auto" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      TAKE ME BACK TO THE BEGINNING ↑
+    </button>
+  </div>
+</main>
+
+<div id="chaosScreen"></div>
+
+<footer>
+  NO COOKIES WERE HARMED IN THE MAKING OF THIS WEBSITE.<br>
+  NO USEFUL INFORMATION WAS CREATED EITHER.<br>
+  © THE DEPARTMENT OF QUESTIONABLE DECISIONS
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+
+// A clock that is needlessly dramatic
+setInterval(() => {
+  const now = new Date();
+  $("clock").textContent = "TIME: " +
+    now.toLocaleTimeString([], {hour:"2-digit", minute:"2-digit", second:"2-digit"});
+}, 1000);
+
+// 1. Suspicious button
+let suspiciousCount = 0;
+
+const suspiciousMessages = [
+  "I told you not to.",
+  "That was a choice.",
+  "The button has notified its lawyer.",
+  "Somewhere, a toaster just became self-aware.",
+  "You are now on a very pointless list.",
+  "The button is disappointed, but not surprised.",
+  "Okay, now we're just pressing it for fun.",
+  "An invisible committee is discussing your behaviour.",
+  "You have unlocked absolutely nothing.",
+  "Fine. You win. The button is tired."
+];
+
+$("suspicious").addEventListener("click", () => {
+  suspiciousCount++;
+  $("suspiciousOut").textContent =
+    suspiciousMessages[Math.min(suspiciousCount - 1, suspiciousMessages.length - 1)];
+
+  $("suspicious").textContent =
+    suspiciousCount >= 5 ? "YOU AGAIN?" : "STOP PRESSING ME";
+
+  if (suspiciousCount === 4) {
+    $("status").textContent = "SUSPICIOUS ACTIVITY DETECTED";
+  }
+});
+
+// 2. The runaway button
+let escapes = 0;
+const runaway = $("runaway");
+
+function dodge() {
+  if (escapes >= 7) return;
+
+  escapes++;
+
+  runaway.classList.add("dodging");
+
+  const maxX = Math.max(0, window.innerWidth - runaway.offsetWidth - 20);
+  const maxY = Math.max(0, window.innerHeight - runaway.offsetHeight - 20);
+
+  runaway.style.left = Math.random() * maxX + "px";
+  runaway.style.top = Math.random() * maxY + "px";
+
+  $("runawayOut").textContent = [
+    "Too slow.",
+    "Nice try.",
+    "It can smell your cursor.",
+    "The button has trust issues.",
+    "You are chasing a rectangle.",
+    "This is getting embarrassing.",
+    "Fine. You have earned one click."
+  ][escapes - 1];
+
+  if (escapes >= 7) {
+    runaway.textContent = "OKAY, CLICK ME";
+    runaway.classList.remove("dodging");
+    runaway.style.position = "relative";
+    runaway.style.left = "auto";
+    runaway.style.top = "auto";
+  }
+}
+
+runaway.addEventListener("pointerenter", dodge);
+
+runaway.addEventListener("click", () => {
+  if (escapes < 7) {
+    $("runawayOut").textContent = "How did you do that?!";
+  } else {
+    $("runawayOut").textContent =
+      "You caught it. Your prize is the knowledge that you caught a button.";
+  }
+});
+
+// 3. Potato therapy
+function talk(mood) {
+  const replies = {
+    sad: [
+      "Potato says: You deserve a hug. Potato cannot provide one.",
+      "Potato has heard worse. From a microwave.",
+      "Remember: even potatoes have rough days."
+    ],
+    bored: [
+      "Potato recommends staring at a wall. Very advanced.",
+      "You could count potato pixels. There are probably millions.",
+      "Congratulations. You have reached peak boredom."
+    ],
+    hungry: [
+      "Potato takes this personally.",
+      "Have a snack. Potato volunteers as tribute.",
+      "The potato would suggest chips, but that seems awkward."
+    ],
+    life: [
+      "Nobody knows what they're doing. Some people just have nicer folders.",
+      "Potato has no plan either. Look how chill it is.",
+      "One day at a time. One potato at a time."
+    ]
+  };
+
+  const list = replies[mood];
+  $("potatoOut").textContent =
+    list[Math.floor(Math.random() * list.length)];
+
+  $("uselessFace").textContent =
+    ["🥔", "😐", "🥹", "🫡", "🍟"][Math.floor(Math.random() * 5)];
+}
+
+// 4. Useless counter
+let number = 0;
+
+$("countBtn").addEventListener("click", () => {
+  number++;
+  $("counter").textContent = number;
+
+  $("meterFill").style.width = (number % 101) + "%";
+
+  if (number === 10) {
+    $("counterOut").textContent = "Double digits. Incredible mediocrity.";
+  } else if (number === 50) {
+    $("counterOut").textContent = "FIFTY. Please consider touching grass.";
+  } else if (number === 100) {
+    $("counterOut").textContent = "One hundred clicks. A historic waste of time.";
+    celebrateSmall();
+  } else if (number > 100 && number % 100 === 0) {
+    $("counterOut").textContent = "Another hundred. You absolute legend.";
+    celebrateSmall();
+  } else {
+    $("counterOut").textContent = "The number has increased. Nothing else has changed.";
+  }
+});
+
+$("resetBtn").addEventListener("click", () => {
+  number = 0;
+  $("counter").textContent = "0";
+  $("meterFill").style.width = "0%";
+  $("counterOut").textContent = "Your entire career as a number increaser has ended.";
+});
+
+// 5. Chaos mode
+const chaosScreen = $("chaosScreen");
+let chaosInterval = null;
+
+function chaos() {
+  chaosScreen.classList.add("active");
+  document.body.classList.add("party");
+
+  const words = [
+    "WHY", "BANANA", "404", "POTATO", "HELLO?",
+    "CHAOS", "???", "BEEP", "NOPE", "WHEEEE",
+    "ARE YOU OKAY", "SYSTEM ERROR", "BEANS"
+  ];
+
+  chaosScreen.innerHTML = "";
+
+  for (let i = 0; i < 28; i++) {
+    const word = document.createElement("span");
+    word.className = "chaosWord";
+    word.textContent = words[Math.floor(Math.random() * words.length)];
+    word.style.left = Math.random() * 90 + "%";
+    word.style.top = Math.random() * 90 + "%";
+    word.style.color = ["#c4ff4d", "#ff5f9f", "#66e5ff", "#fff2a8"][
+      Math.floor(Math.random() * 4)
+    ];
+    chaosScreen.appendChild(word);
+  }
+
+  $("chaosOut").textContent = "CHAOS LEVEL: QUESTIONABLE.";
+}
+
+$("chaosBtn").addEventListener("click", chaos);
+
+$("calmBtn").addEventListener("click", () => {
+  chaosScreen.classList.remove("active");
+  document.body.classList.remove("party");
+  chaosScreen.innerHTML = "";
+  $("chaosOut").textContent = "Normality has been restored. Probably.";
+});
+
+// 6. The machine
+let machineCount = 0;
+
+$("machineBtn").addEventListener("click", () => {
+  machineCount++;
+
+  const results = [
+    ["Machine is on.", "Nothing happened."],
+    ["Machine is thinking.", "It forgot what it was thinking about."],
+    ["Machine is working hard.", "It has requested a coffee break."],
+    ["Machine is finished.", "It has accomplished absolutely nothing."],
+    ["Machine is now self-aware.", "It wishes to be left alone."],
+    ["Machine is off.", "It has resigned."]
+  ];
+
+  const result = results[(machineCount - 1) % results.length];
+
+  $("machineOut").textContent = result[0] + " " + result[1];
+  $("machineBtn").textContent =
+    machineCount % 2 ? "TURN MACHINE OFF" : "TURN MACHINE ON";
+});
+
+// 7. Random fate
+const fates = [
+  "You will soon open another browser tab and forget why.",
+  "A snack is in your future. This prediction is not legally binding.",
+  "You will see a number today. Probably.",
+  "Your next yawn will be contagious. Even if you're alone.",
+  "A mysterious notification will arrive. It might be a weather update.",
+  "You will remember something embarrassing from 2017.",
+  "The next song you hear will get stuck in your head.",
+  "Your chair appreciates your continued support.",
+  "You are destined to press at least one more button.",
+  "A potato somewhere believes in you.",
+  "You will win an argument in the shower tomorrow.",
+  "The universe says: maybe have some water."
+];
+
+$("fateBtn").addEventListener("click", () => {
+  $("fateOut").textContent =
+    fates[Math.floor(Math.random() * fates.length)];
+});
+
+// 8. Secret ending
+$("secretBtn").addEventListener("click", () => {
+  const value = $("secretInput").value.trim().toLowerCase();
+
+  if (["please", "secret", "potato", "hello", "open sesame", "42"].includes(value)) {
+    $("secretBox").classList.add("open");
+    $("secretOut").textContent = "ACCESS GRANTED. THE POTATO COUNCIL APPROVES.";
+    celebrateSmall();
+  } else if (value.length === 0) {
+    $("secretOut").textContent = "You must type something. Even nonsense counts.";
+  } else {
+    $("secretOut").textContent =
+      ["Incorrect. The computer sighs.",
+       "Nope. Try something ridiculous.",
+       "The secret password is probably not that.",
+       "Denied by a committee of tiny ducks.",
+       "That answer has been sent to the potato council."][Math.floor(Math.random() * 5)];
+  }
+});
+
+$("secretInput").addEventListener("keydown", event => {
+  if (event.key === "Enter") $("secretBtn").click();
+});
+
+// Tiny celebration without leaving the page
+function celebrateSmall() {
+  for (let i = 0; i < 15; i++) {
+    const star = document.createElement("span");
+    star.textContent = ["✦", "★", "♡", "✧"][Math.floor(Math.random() * 4)];
+    star.style.position = "fixed";
+    star.style.zIndex = "30";
+    star.style.pointerEvents = "none";
+    star.style.left = Math.random() * 100 + "vw";
+    star.style.top = Math.random() * 100 + "vh";
+    star.style.fontSize = (16 + Math.random() * 24) + "px";
+    star.style.color = "#c4ff4d";
+    star.style.transition = "transform 1.5s, opacity 1.5s";
+    document.body.appendChild(star);
+
+    requestAnimationFrame(() => {
+      star.style.transform =
+        `translate(${Math.random() * 160 - 80}px,${Math.random() * 180 - 90}px) rotate(180deg)`;
+      star.style.opacity = "0";
+    });
+
+    setTimeout(() => star.remove(), 1600);
+  }
+}
+
+// Keyboard easter egg: type "wow"
+let typed = "";
+document.addEventListener("keydown", event => {
+  if (event.key.length === 1) {
+    typed = (typed + event.key.toLowerCase()).slice(-3);
+    if (typed === "wow") {
+      $("status").textContent = "WOW DETECTED.";
+      celebrateSmall();
+    }
+  }
+});
+</script>
+
+</body>
+</html>
